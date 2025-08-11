@@ -15,6 +15,9 @@
 
 #include <asm/early_ioremap.h>
 
+/* k4.19 compat */
+#define BITS_TO_BYTES(nr)       DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
+
 static const struct console *earlycon_console __initdata;
 static const struct font_desc *font;
 static u32 simplefb_x, simplefb_y;
@@ -206,17 +209,15 @@ static int __init simplefb_earlycon_setup(struct earlycon_device *device,
 	struct uart_port *port = &device->port;
 	u32 xres, yres;
 	u32 i;
-	int ret;
 
 	si = &screen_info;
 
-	if (!port->mapbase || !device->options)
+	if (!port->mapbase)
 		return -ENODEV;
 
-	ret = sscanf(device->options, "%u,%u", &xres, &yres);
-	if (ret != 2)
-		return -ENODEV;
-
+	/* FIXME: parse earlycon=simplefb,<addr>,<w>,<h>... cmdline opts for width/height on k4.19 */
+	xres = 480;
+	yres = 640;
     si->lfb_linelength = xres * 4;
     si->lfb_width = xres;
     si->lfb_height = yres;
