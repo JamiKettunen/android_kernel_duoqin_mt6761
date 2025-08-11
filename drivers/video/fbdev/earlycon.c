@@ -107,7 +107,7 @@ static void simplefb_earlycon_scroll_up(void)
 static void simplefb_earlycon_write_char(u32 *dst, unsigned char c, unsigned int h)
 {
 	const u32 color_black = 0x00000000;
-	const u32 color_white = 0x00ffffff; // a8r8g8b8
+	const u32 color_white = 0xffffffff; // a8r8g8b8
 	const u8 *src;
 	int m, n, bytes;
 	u8 x;
