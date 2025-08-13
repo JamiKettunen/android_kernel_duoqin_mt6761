@@ -78,12 +78,12 @@ static struct LCM_UTIL_FUNCS lcm_util;
 /* static unsigned char lcd_id_pins_value = 0xFF; */
 static const unsigned char LCD_MODULE_ID = 0x01;
 #define LCM_DSI_CMD_MODE	0
-#define FRAME_WIDTH		(720)
-#define FRAME_HEIGHT	(1280)
-#define LCM_DENSITY		(320)
+#define FRAME_WIDTH		(480)
+#define FRAME_HEIGHT	(640)
+#define LCM_DENSITY		(286)
 
-#define LCM_PHYSICAL_WIDTH	(0)
-#define LCM_PHYSICAL_HEIGHT	(0)
+#define LCM_PHYSICAL_WIDTH	(43000)
+#define LCM_PHYSICAL_HEIGHT	(57000)
 
 #define REGFLAG_DELAY		0xFFFC
 #define REGFLAG_UDELAY	0xFFFB
