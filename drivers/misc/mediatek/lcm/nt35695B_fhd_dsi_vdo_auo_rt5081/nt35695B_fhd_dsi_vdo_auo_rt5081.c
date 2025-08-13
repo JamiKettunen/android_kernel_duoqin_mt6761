@@ -67,13 +67,13 @@ static struct LCM_UTIL_FUNCS lcm_util;
 /* static unsigned char lcd_id_pins_value = 0xFF; */
 static const unsigned char LCD_MODULE_ID = 0x01;
 #define LCM_DSI_CMD_MODE 0
-#define FRAME_WIDTH (1080)
-#define FRAME_HEIGHT (1920)
+#define FRAME_WIDTH (480)
+#define FRAME_HEIGHT (640)
 
 /* physical size in um */
-#define LCM_PHYSICAL_WIDTH (74520)
-#define LCM_PHYSICAL_HEIGHT (132480)
-#define LCM_DENSITY (480)
+#define LCM_PHYSICAL_WIDTH (43000)
+#define LCM_PHYSICAL_HEIGHT (57000)
+#define LCM_DENSITY (286)
 
 #define REGFLAG_DELAY		0xFFFC
 #define REGFLAG_UDELAY	0xFFFB
@@ -1328,7 +1328,7 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 #ifdef CONFIG_MTK_ROUND_CORNER_SUPPORT
 	params->round_corner_en = 1;
 	params->full_content = 0;
-	params->corner_pattern_width = 1080;
+	params->corner_pattern_width = 480;
 	params->corner_pattern_height = 32;
 	params->corner_pattern_height_bot = 32;
 #endif
