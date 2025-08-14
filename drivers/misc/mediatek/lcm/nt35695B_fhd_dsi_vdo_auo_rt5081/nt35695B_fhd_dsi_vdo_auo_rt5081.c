@@ -144,12 +144,6 @@ static struct LCM_setting_table lcm_suspend_setting[] = {
 	{REGFLAG_END_OF_TABLE, 0, {}},
 };
 
-static struct LCM_setting_table bl_level[] = {
-	/* MIPI_DCS_SET_DISPLAY_BRIGHTNESS */
-	{0x51, 1, {0xFF} },
-	{REGFLAG_END_OF_TABLE, 0x00, {} }
-};
-
 static void push_table(void *cmdq, struct LCM_setting_table *table,
 	unsigned int count, unsigned char force_update)
 {
@@ -303,13 +297,6 @@ static unsigned int lcm_compare_id(void)
 	return (id == LCM_ID_NT35695 && version_id == 0x81);
 }
 
-static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
-{
-	bl_level[0].para_list[0] = level;
-
-	push_table(handle, bl_level,
-		sizeof(bl_level) / sizeof(struct LCM_setting_table), true);
-}
 
 static unsigned int lcm_esd_check(void)
 {
@@ -324,17 +311,17 @@ static unsigned int lcm_esd_check(void)
 	return (buffer[0] != 0x24);
 }
 
-struct LCM_DRIVER nt35695B_fhd_dsi_vdo_auo_rt5081_drv = {
-	.name = "nt35695B_fhd_dsi_vdo_auo_rt5081_drv"
+struct LCM_DRIVER nt35695B_fhd_dsi_vdo_auo_rt5081_lcm_drv = {
+	.name = "nt35695B_fhd_dsi_vdo_auo_rt5081_drv",
 	.set_util_funcs = lcm_set_util_funcs,
 	.get_params = lcm_get_params,
 	.init = lcm_init,
 	.suspend = lcm_suspend,
 	.resume = lcm_resume,
-	.init_power = lcm_init_power,
 	.suspend_power = lcm_suspend_power,
 	.resume_power = lcm_resume_power,
+	// TODO: below methods appear unused at runtime so far..
+	.init_power = lcm_init_power,
 	.compare_id = lcm_compare_id,
-	.set_backlight_cmdq = lcm_setbacklight_cmdq,
 	.esd_check = lcm_esd_check,
 };
