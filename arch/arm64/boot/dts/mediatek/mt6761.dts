@@ -3522,5 +3522,7 @@ mipi_rx_ana_csi0b: mipi_rx_ana_csi0b@11c11000 {
 #include "mediatek/bat_setting/mt6761_battery_prop.dtsi"
 #include "mediatek/mt6370.dtsi"
 #include "mediatek/mt6370_pd.dtsi"
+// FIXME: move below changes into DTBO as well? match stock for now at least...
+#include "mediatek/mt6761-f21pro.dtsi"
 
 
