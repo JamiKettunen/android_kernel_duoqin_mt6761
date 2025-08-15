@@ -19,6 +19,10 @@
 	};
 };
 
+&md_auxadc {
+	io-channels = <&auxadc 2>;
+};
+
 
 /*************************
  * CLK_BUF DTSI File
@@ -39,8 +43,14 @@
 &i2c0 {
 	#address-cells = <1>;
 	#size-cells = <0>;
-	clock-frequency = <400000>;
+	clock-frequency = <300000>;
 	mediatek,use-open-drain;
+
+	cap_touch_mtk: cap_touch@62 {
+		compatible = "mediatek,cap_touch";
+		reg = <0x62>;
+		status = "okay";
+	};
 };
 
 &i2c1 {
@@ -243,10 +253,10 @@
 		<20 6 0 0 0 0 0>,
 		<21 3 0 0 1 1 0>,
 		<22 3 0 0 1 0 0>,
-		<23 0 0 0 1 1 0>,
+		<23 1 0 0 0 0 0>,
 		<24 3 0 0 1 0 0>,
-		<25 3 0 0 1 0 0>,
-		<26 3 0 0 1 0 0>,
+		<25 5 0 0 0 0 0>,
+		<26 0 0 0 1 1 0>,
 		<27 3 0 0 0 0 0>,
 		<28 3 0 0 1 0 0>,
 		<29 1 0 0 1 0 1>,
@@ -262,7 +272,7 @@
 		<39 1 0 0 0 0 0>,
 		<40 1 0 0 1 1 0>,
 		<41 0 0 0 1 1 0>,
-		<42 0 0 0 1 0 0>,
+		<42 4 0 0 0 0 0>,
 		<43 1 0 0 0 0 0>,
 		<44 1 0 0 1 0 0>,
 		<45 1 0 0 0 0 0>,
@@ -311,10 +321,10 @@
 		<88 0 1 0 1 0 0>,
 		<89 1 0 0 1 0 0>,
 		<90 2 0 0 0 0 0>,
-		<91 0 1 0 1 0 0>,
+		<91 1 0 0 0 0 0>,
 		<92 1 0 0 0 0 0>,
 		<93 1 0 0 1 1 0>,
-		<94 0 0 0 1 0 0>,
+		<94 1 0 0 1 1 0>,
 		<95 1 0 0 1 1 0>,
 		<96 1 0 0 0 0 0>,
 		<97 0 1 0 1 0 0>,
@@ -327,9 +337,9 @@
 		<104 1 0 0 1 1 1>,
 		<105 1 0 0 1 1 1>,
 		<106 1 0 0 1 1 1>,
-		<107 2 0 0 0 0 0>,
-		<108 1 0 0 0 0 0>,
-		<109 2 0 0 1 1 0>,
+		<107 4 0 0 1 1 0>,
+		<108 4 0 0 1 1 0>,
+		<109 4 0 0 1 1 0>,
 		<110 0 0 0 1 0 0>,
 		<111 0 0 0 1 0 0>,
 		<112 0 0 0 1 0 0>,
@@ -362,8 +372,8 @@
 		<151 6 0 0 1 0 0>,
 		<152 5 0 0 1 1 0>,
 		<153 5 0 0 1 0 0>,
-		<154 0 1 1 1 0 0>,
-		<155 1 0 0 1 0 0>,
+		<154 0 1 0 1 0 0>,
+		<155 0 1 0 1 0 0>,
 		<156 1 1 0 0 0 0>,
 		<157 1 1 0 0 0 0>,
 		<158 1 1 0 0 0 0>,
@@ -376,7 +386,7 @@
 		<165 0 0 0 1 0 0>,
 		<166 0 0 0 1 0 0>,
 		<167 0 0 0 1 0 0>,
-		<168 0 0 0 1 0 0>,
+		<168 0 1 0 1 0 0>,
 		<169 0 1 0 1 0 0>,
 		<170 0 1 0 1 0 0>,
 		<171 0 0 0 1 0 0>,
@@ -438,12 +448,6 @@
 	status = "okay";
 };
 
-&rt9465_slave_chr {
-	interrupt-parent = <&pio>;
-	interrupts = <23 IRQ_TYPE_LEVEL_LOW 23 0>;
-	status = "okay";
-};
-
 &tcpc_pd {
 	interrupt-parent = <&pio>;
 	interrupts = <41 IRQ_TYPE_LEVEL_LOW 41 0>;
@@ -470,21 +474,11 @@
 
 &md1_sim1_hot_plug_eint {
 	compatible = "mediatek,md1_sim1_hot_plug_eint-eint";
-	interrupts = <0 4>;
-	debounce = <0 50000>;
+	interrupts = <0 8>;
+	debounce = <0 10000>;
 	dedicated = <0 0>;
 	src_pin = <0 1>;
 	sockettype = <0 0>;
-	status = "okay";
-};
-
-&md1_sim2_hot_plug_eint {
-	compatible = "mediatek,md1_sim2_hot_plug_eint-eint";
-	interrupts = <1 4>;
-	debounce = <1 50000>;
-	dedicated = <1 0>;
-	src_pin = <1 2>;
-	sockettype = <1 0>;
 	status = "okay";
 };
 
@@ -562,14 +556,12 @@
 	mediatek,kpd-use-extend-type = <0>;
 	/*HW Keycode [0~71] -> Linux Keycode*/
 	mediatek,kpd-hw-map-num = <72>;
-	mediatek,kpd-hw-init-map = <114 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 >;
+	mediatek,kpd-hw-init-map = <3 352 0 105 103 108 0 0 0 8 523 0 5 231 2 0 0 0 158 11 0 227 10 9 0 0 0 6 106 0 7 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
 	mediatek,kpd-pwrkey-eint-gpio = <0>;
 	mediatek,kpd-pwkey-gpio-din  = <0>;
-	mediatek,kpd-hw-dl-key0 = <17>;
-	mediatek,kpd-hw-dl-key1 = <0>;
-	mediatek,kpd-hw-dl-key2 = <8>;
-	mediatek,kpd-hw-recovery-key = <17>;
-	mediatek,kpd-hw-factory-key = <0>;
+	mediatek,kpd-hw-dl-key0 = <19>;
+	mediatek,kpd-hw-recovery-key = <5>;
+	mediatek,kpd-hw-factory-key = <4>;
 	status = "okay";
 };
 

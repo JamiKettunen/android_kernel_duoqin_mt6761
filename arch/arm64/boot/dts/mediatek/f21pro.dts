@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Copyright (c) 2019 MediaTek Inc.
+ * Mon Mar 25 18:47:30 CST 2024 stock v4.19.127 dtbo.img overrides to make identical f21pro.dtbo
+ * Based on k61v1_64_bsp.dts
  *
+ * Copyright (c) 2019 MediaTek Inc.
+ * Copyright (c) 2025 Jami Kettunen <jami.kettunen@protonmail.com>
  */
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
@@ -9,6 +12,8 @@
 #include <dt-bindings/pinctrl/mt6761-pinfunc.h>
 #include <dt-bindings/mmc/mt6761-msdc.h>
 #include <dt-bindings/clock/mt6761-clk.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/gpio/gpio.h>
 
 /dts-v1/;
 /plugin/;
@@ -61,7 +66,7 @@
 	};
 	led5:led@5 {
 		compatible = "mediatek,button-backlight";
-		led_mode = <0>;
+		led_mode = <3>;
 		data = <1>;
 		pwm_config = <0 0 0 0 0>;
 	};
@@ -76,6 +81,46 @@
 		vib_timer = <25>;
 		vib_limit = <9>;
 		vib_vol= <9>;
+	};
+
+	/* top-left keypad button */
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		voice {
+			label = "Voice Key";
+			linux,code = <KEY_MENU>;
+			gpios = <&pio 26 GPIO_ACTIVE_LOW>;
+			gpio-key,wakeup;
+		};
+	};
+};
+
+&pmic_accdet {
+	headset-use-ap-eint = <1>;
+
+	pinctrl-names = "mic_state1", "mic_state2";
+	pinctrl-0 = <&mic_state1>;
+	pinctrl-1 = <&mic_state2>;
+};
+
+&pio {
+	mic_state1: mic_state1 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO155__FUNC_GPIO155>;
+			slew-rate = <1>;
+			bias-disable;
+			output-low;
+		};
+	};
+
+	mic_state2: mic_state2 {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO155__FUNC_GPIO155>;
+			slew-rate = <1>;
+			bias-disable;
+			output-high;
+		};
 	};
 };
 
@@ -132,10 +177,6 @@
 	};
 };
 
-&charger {
-	charger_configuration= <1>;
-};
-
 &pe2 {
 	dcs_chg1_charger_current = <2000000>;
 	dcs_chg2_charger_current = <2000000>;
@@ -183,15 +224,11 @@
 	mt6370,intr_gpio = <&pio 11 0x0>;
 };
 
-&mt6370_chg {
-	bc12_sel = <1>;
-};
-
 &i2c3 {
 	rt9465@4b {
 		compatible = "richtek,rt9465";
 		reg = <0x4b>;
-		status = "okay";
+		status = "disabled";
 		rt,en_gpio_num = <176>;
 		rt,en_gpio = <&pio 176 0x0>;
 		rt,intr_gpio_num = <23>; /* direct defined GPIO num */
@@ -207,6 +244,27 @@
 		/* en_te; */
 		en_wdt;
 	};
+
+	aw87359@58 {
+		status = "okay";
+		compatible = "awinic,aw87xxx_pa_59";
+		reg = <0x58>;
+		driver-num = <0>;
+		monitor-flag = <1>;
+		monitor-timer-val = <3000>;
+		monitor-timer-count-max = <5>;
+	};
+};
+
+&spi3 {
+	status = "okay";
+
+	spi-ir {
+		compatible = "ge,achc";
+		reg = <0x0>;
+		spi-max-frequency = <19200000>;
+		ir-supply = <&mt_pmic_vcn33_wifi_ldo_reg>;
+	};
 };
 
 &mt6370_typec {
@@ -219,7 +277,7 @@
 	};
 	gpslna_pins_init: gpslna@0 {
 		pins_cmd_dat {
-			pinmux = <PINMUX_GPIO91__FUNC_GPIO91>;
+			pinmux = <PINMUX_GPIO168__FUNC_GPIO168>;
 			slew-rate = <0>;
 			bias-disable;
 			output-low;
@@ -227,14 +285,14 @@
 	};
 	gpslna_pins_oh: gpslna@1 {
 		pins_cmd_dat {
-			pinmux = <PINMUX_GPIO91__FUNC_GPIO91>;
+			pinmux = <PINMUX_GPIO168__FUNC_GPIO168>;
 			slew-rate = <1>;
 			output-high;
 		};
 	};
 	gpslna_pins_ol: gpslna@2 {
 		pins_cmd_dat {
-			pinmux = <PINMUX_GPIO91__FUNC_GPIO91>;
+			pinmux = <PINMUX_GPIO168__FUNC_GPIO168>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -381,7 +439,11 @@
 };
 /* AUDIO end */
 
-#include <k61v1_64_bsp/cust.dtsi>
-#include "mediatek/cust_mt6761_camera.dtsi"
-#include "mediatek/cust_mt6761_touch_720x1280.dtsi"
+&mt6370_chg {
+	bc12_sel = <1>;
+};
+
+#include "f21pro/cust.dtsi"
+#include "f21pro/cust_mt6761_camera.dtsi"
+#include "f21pro/cust_mt6761_touch_480x640.dtsi"
 /*End of this file, DO NOT ADD ANYTHING HERE*/
