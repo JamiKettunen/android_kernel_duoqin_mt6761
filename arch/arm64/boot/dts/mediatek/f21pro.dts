@@ -225,24 +225,13 @@
 };
 
 &i2c3 {
-	rt9465@4b {
-		compatible = "richtek,rt9465";
-		reg = <0x4b>;
-		status = "disabled";
-		rt,en_gpio_num = <176>;
-		rt,en_gpio = <&pio 176 0x0>;
-		rt,intr_gpio_num = <23>; /* direct defined GPIO num */
-		rt,intr_gpio = <&pio 23 0x0>;
-		interrupt-names = "wdtmri";
-		charger_name = "secondary_chg";
-		ichg = <1500000>; /* uA */
-		mivr = <4500000>; /* uV */
-		cv = <4550000>; /* uV */
-		ieoc = <700000>; /* uA */
-		safety_timer = <12>; /* hour */
-		en_st; /* safety timer */
-		/* en_te; */
-		en_wdt;
+	status = "okay";
+
+	aw87391_pa@58 {
+		compatible = "awinic,aw87xxx_pa";
+		reg = <0x58>;
+		dev_index = <0>;
+		status = "okay";
 	};
 
 	aw87359@58 {
